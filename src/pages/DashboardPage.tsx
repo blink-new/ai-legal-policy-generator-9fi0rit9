@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { Plus, FileText, Clock, Download, Edit } from 'lucide-react'
 
 import { useSupabaseAuth } from '../context/SupabaseAuthContext'
+import { useNavigate } from 'react-router-dom'
 
 export function DashboardPage() {
   const policies = [
@@ -27,7 +28,13 @@ export function DashboardPage() {
     }
   ]
 
-  const { user } = useSupabaseAuth()
+  const { user, signOut } = useSupabaseAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    await signOut()
+    navigate('/auth')
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -49,6 +56,12 @@ export function DashboardPage() {
               {user ? (
                 <>
                   <div className="font-semibold">{user.email}</div>
+                  <button
+                    onClick={handleLogout}
+                    className="mt-2 md:mt-0 ml-0 md:ml-4 px-4 py-2 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium border border-slate-200 transition-colors"
+                  >
+                    Log Out
+                  </button>
                 </>
               ) : null}
             </div>
