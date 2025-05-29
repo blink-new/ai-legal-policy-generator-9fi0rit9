@@ -5,6 +5,8 @@ import { Header } from '../components/layout/Header'
 import { Link } from 'react-router-dom'
 import { Plus, FileText, Clock, Download, Edit } from 'lucide-react'
 
+import { useSupabaseAuth } from '../context/SupabaseAuthContext'
+
 export function DashboardPage() {
   const policies = [
     {
@@ -25,6 +27,8 @@ export function DashboardPage() {
     }
   ]
 
+  const { user } = useSupabaseAuth()
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Header />
@@ -40,12 +44,21 @@ export function DashboardPage() {
               Manage and generate professional legal documents for your business
             </p>
           </div>
-          <Link to="/wizard">
-            <Button className="bg-slate-800 hover:bg-slate-700 text-white mt-4 md:mt-0">
-              <Plus className="h-4 w-4 mr-2" />
-              Create New Policy
-            </Button>
-          </Link>
+          <div className="flex flex-col items-end space-y-2 md:space-y-0 md:flex-row md:items-center md:space-x-6">
+            <div className="text-right text-slate-700 text-sm">
+              {user ? (
+                <>
+                  <div className="font-semibold">{user.email}</div>
+                </>
+              ) : null}
+            </div>
+            <Link to="/wizard">
+              <Button className="bg-slate-800 hover:bg-slate-700 text-white mt-4 md:mt-0">
+                <Plus className="h-4 w-4 mr-2" />
+                Create New Policy
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Stats Cards */}
