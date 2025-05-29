@@ -54,15 +54,7 @@ export function DashboardPage() {
           <div className="flex flex-col items-end space-y-2 md:space-y-0 md:flex-row md:items-center md:space-x-6">
             <div className="text-right text-slate-700 text-sm">
               {user ? (
-                <>
-                  <div className="font-semibold">{user.email}</div>
-                  <button
-                    onClick={handleLogout}
-                    className="mt-2 md:mt-0 ml-0 md:ml-4 px-4 py-2 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium border border-slate-200 transition-colors"
-                  >
-                    Log Out
-                  </button>
-                </>
+                <div className="font-semibold">{user.email}</div>
               ) : null}
             </div>
             <Link to="/wizard">

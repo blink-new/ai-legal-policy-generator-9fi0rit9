@@ -1,10 +1,18 @@
 import { Button } from '../ui/button'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Scale, Menu, X } from 'lucide-react'
 import { useState } from 'react'
+import { useSupabaseAuth } from '../../context/SupabaseAuthContext'
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { user, signOut } = useSupabaseAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    await signOut()
+    navigate('/auth')
+  }
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
@@ -31,18 +39,33 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* Desktop CTA */}
+          {/* Desktop CTA or User */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/auth">
-              <Button variant="ghost" className="text-slate-600 hover:text-slate-800">
-                Log In
-              </Button>
-            </Link>
-            <Link to="/auth">
-              <Button className="bg-slate-800 hover:bg-slate-700 text-white">
-                Get Started
-              </Button>
-            </Link>
+            {user ? (
+              <>
+                <span className="text-slate-700 font-medium text-sm mr-2">{user.email}</span>
+                <Button
+                  variant="outline"
+                  className="border-slate-300 text-slate-700 hover:bg-slate-100"
+                  onClick={handleLogout}
+                >
+                  Log Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/auth">
+                  <Button variant="ghost" className="text-slate-600 hover:text-slate-800">
+                    Log In
+                  </Button>
+                </Link>
+                <Link to="/auth">
+                  <Button className="bg-slate-800 hover:bg-slate-700 text-white">
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -80,16 +103,31 @@ export function Header() {
                 About
               </Link>
               <div className="border-t border-slate-200 pt-4 px-4 space-y-2">
-                <Link to="/auth" className="block w-full">
-                  <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-slate-800">
-                    Log In
-                  </Button>
-                </Link>
-                <Link to="/auth" className="block w-full">
-                  <Button className="w-full bg-slate-800 hover:bg-slate-700 text-white">
-                    Get Started
-                  </Button>
-                </Link>
+                {user ? (
+                  <>
+                    <span className="block text-slate-700 font-medium text-sm mb-2">{user.email}</span>
+                    <Button
+                      variant="outline"
+                      className="w-full border-slate-300 text-slate-700 hover:bg-slate-100"
+                      onClick={() => { setIsMobileMenuOpen(false); handleLogout() }}
+                    >
+                      Log Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/auth" className="block w-full">
+                      <Button variant="ghost" className="w-full justify-start text-slate-600 hover:text-slate-800">
+                        Log In
+                      </Button>
+                    </Link>
+                    <Link to="/auth" className="block w-full">
+                      <Button className="w-full bg-slate-800 hover:bg-slate-700 text-white">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
